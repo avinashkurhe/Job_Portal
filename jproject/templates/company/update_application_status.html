@@ -1,0 +1,42 @@
+{% extends 'company/cbase.html' %}
+{% block 'main' %}
+<div class="container mt-5">
+    <h2>Update Job Application Status</h2>
+    {% for i in data %}
+    <form action="/update_application_status/{{i.id}}" style="background-color: antiquewhite;" class="p-3" method="post">
+        {% csrf_token %}
+       
+
+        <div class="form-group">
+            <label for="applicant_name">Name:</label>
+            <input type="text" class="form-control" id="applicant_name" name="applicant_name" value="{{i.applicant.first_name}} {{i.applicant.last_name}}" readonly required>
+        </div>
+        <div class="form-group">
+            <label for="applicant_email">Email:</label>
+            <input type="email" class="form-control" id="applicant_email" name="applicant_email" value="{{i.applicant.email}}" readonly required>
+        </div>
+        <div class="form-group">
+            <label for="cover_letter">Cover Letter:</label>
+            <textarea class="form-control" id="cover_letter" name="cover_letter" rows="4" readonly >{{i.cover_letter}}</textarea>
+        </div>
+        <div>
+            {% if i.resume %}
+                <strong>Resume:</strong> <a href="{{ i.resume.url }}" download>Download Resume</a><br>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select name="status" id="status" class="form-control">
+                <option value="Pending" {% if job_application.status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Reviewed" {% if job_application.status == 'Reviewed' %}selected{% endif %}>Reviewed</option>
+                <option value="Interview Scheduled" {% if job_application.status == 'Interview Scheduled' %}selected{% endif %}>Interview Scheduled</option>
+                <option value="Offered" {% if job_application.status == 'Offered' %}selected{% endif %}>Offered</option>
+                <option value="Rejected" {% if job_application.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Status</button>
+       
+    </form>
+    {% endfor %}
+</div>
+{% endblock 'main' %}

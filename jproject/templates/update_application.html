@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'main' %}
+{% for i in data %}
+<div class="container mt-5">
+    <h1 class="text-center">Update Application for {{ i.job.jobtitle }}</h1>
+    <form method="POST" enctype="multipart/form-data" class="mt-4">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="applicant_name">Name:</label>
+            <input type="text" class="form-control" id="applicant_name" name="applicant_name" value="{{ request.user.first_name }} {{ request.user.last_name }}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="applicant_email">Email:</label>
+            <input type="email" class="form-control" id="applicant_email" name="applicant_email" value="{{ request.user.email }}" readonly>
+        </div>
+        
+        <div class="form-group">
+            <label for="cover_letter">Cover Letter:</label>
+            <textarea class="form-control" id="cover_letter" name="cover_letter" rows="4">{{ i.cover_letter }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="resume">Resume:</label>
+            {% if i.resume %}
+                <p>Current Resume: <a href="{{ application.resume.url }}" target="_blank">View Resume</a></p>
+            {% else %}
+                <p>No resume uploaded.</p>
+            {% endif %}
+            <input type="file" class="form-control-file" id="resume" name="resume">
+        </div>
+        <button type="submit" class="btn btn-primary">Update Application</button>
+    </form>
+</div>
+{% endfor %}
+{% endblock 'main' %}

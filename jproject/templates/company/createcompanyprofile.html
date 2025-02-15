@@ -1,0 +1,58 @@
+{% extends 'company/cbase.html' %}
+{% block 'main' %}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="col-md-6">
+        <form  method="post" style="background-color: rgb(107, 144, 144);" class="p-5 rounded" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h3>Create Company Profile</h3>
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{error}}
+            </div>
+            {% endif %}
+            <div class="mb-3">
+                <label for="fname" class="form-label">Company Owner First Name</label>
+                <input type="text" class="form-control border-primary" id="fname" name="fname" value="{{user.first_name}}">
+            </div>
+            <div class="mb-3">
+                <label for="lname" class="form-label">Company Owner Last Name</label>
+                <input type="text" class="form-control border-primary" id="lname" name="lname" value="{{user.last_name}}" required>
+            </div>
+            <div class="mb-3">
+                <label for="company_name" class="form-label">Company Name</label>
+                <input type="text" class="form-control border-primary" id="company_name" name="company_name" required>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <textarea class="form-control border-primary" id="address" name="address" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" class="form-control border-primary" id="phone" name="phone">
+            </div>
+            <div class="mb-3">
+                <label for="website" class="form-label">Company Website</label>
+                <input type="url" class="form-control border-primary" id="website" name="website">
+            </div>
+            <div class="mb-3">
+                <label for="founded_date" class="form-label">Founded Date</label>
+                <input type="date" class="form-control border-primary" id="founded_date" name="founded_date">
+            </div>
+            <div class="mb-3">
+                <label for="logo" class="form-label">Logo</label>
+                <input type="file" class="form-control border-primary" id="logo" name="logo">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control border-primary" id="description" name="description"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="number_of_employees" class="form-label">Number of Employees</label>
+                <input type="number" class="form-control border-primary" id="number_of_employees" name="number_of_employees">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Create Profile</button>
+        </form>
+    </div>
+</div>
+{% endblock 'main' %}

@@ -1,0 +1,72 @@
+{% extends 'company/cbase.html' %}
+{% block 'main' %}
+    <div class="container mt-5">
+        <h2 class="mb-4">Post a Job</h2>
+        <form method="post" style="background-color:antiquewhite;" class="p-3" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="jobtitle" class="form-label">Job Title:</label>
+                <input type="text" class="form-control" id="jobtitle" name="jobtitle" required>
+            </div>
+            <div class="mb-3">
+                <label for="salrange" class="form-label">Salary Range:</label>
+                <input type="number" class="form-control" id="salrange" name="salrange" required>
+            </div>
+            <div class="mb-3">
+                <label for="cat" class="form-label">Category:</label>
+                <select class="form-control" id="cat" name="cat" required>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Education">Education</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Marketing and Advertising">Marketing and Advertising</option>
+                    <option value="Sales">Sales</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="jdetails" class="form-label">Job Details:</label>
+                <textarea class="form-control" id="jdetails" name="jdetails" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="is_active" class="form-label">Is Active:</label>
+                <input type="checkbox" class="form-check-input" id="is_active" name="is_active">
+            </div>
+            <div class="mb-3">
+                <label for="location" class="form-label">Location:</label>
+                <input type="text" class="form-control" id="location" name="location" required>
+            </div>
+            <div class="mb-3">
+                <label for="application_deadline" class="form-label">Application Deadline:</label>
+                <input type="datetime-local" class="form-control" id="application_deadline" name="application_deadline" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="contact_email" class="form-label">Contact Email:</label>
+                <input type="email" class="form-control" id="contact_email" name="contact_email" required>
+            </div>
+            <div class="mb-3">
+                <label for="contact_phone" class="form-label">Contact Phone:</label>
+                <input type="text" class="form-control" id="contact_phone" name="contact_phone" required>
+            </div>
+            <div class="mb-3">
+                <label for="job_type" class="form-label">Job Type:</label>
+                <input type="text" class="form-control" id="job_type" name="job_type" required>
+            </div>
+            <div class="mb-3">
+                <label for="experience_required" class="form-label">Experience Required:</label>
+                <input type="text" class="form-control" id="experience_required" name="experience_required" required>
+            </div>
+            <div class="mb-3">
+                <label for="job_summary" class="form-label">Job Summary:</label>
+                <textarea class="form-control" id="job_summary" name="job_summary" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="required_skills" class="form-label">Required Skills:</label>
+                <textarea class="form-control" id="required_skills" name="required_skills" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Post Job</button>
+        </form>
+    </div>
+{% endblock 'main' %}

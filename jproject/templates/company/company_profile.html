@@ -1,0 +1,130 @@
+{% extends 'company/cbase.html' %}
+{% block 'main' %}
+<style>
+    .card-content {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-img-top {
+        border-radius: 15px 15px 0 0;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .show-form .card-form {
+        display: block;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        border-radius: 50px;
+        padding: 10px 20px;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        border-radius: 10px;
+    }
+</style>
+{% if not data %}
+<div class="container text-center mt-5">
+    <div class="alert alert-warning" role="alert">
+        <h1 class="alert-heading">Profile Not Created</h1>
+        <h3>Please create a profile for the best experience.</h3>
+        <hr>
+        <p class="mb-0">Click here to create your profile: <a href="{% url 'create_company_profile' %}" class="btn btn-primary btn-sm mt-2">Create Profile</a></p>
+    </div>
+</div>
+{% endif %}
+{% for i in data%}
+<div class="container mt-5 mb-5 d-flex justify-content-around" style="width: 1300px; ">
+    <div class="card card-content">
+        <img src="{{i.logo.url}}" class="card-img-top rounded-circle m-5" style="width: 150px; height: 150px; object-fit: cover;" alt="Profile Picture">
+        <div class="card-body">
+            <h5 class="card-title">{{i.company_name}}</h5>
+            <p class="card-text">
+                <b>Address:</b> {{i.address}}<br>
+                <b>Phone:</b> {{i.phone}}<br>
+                <b>Website:</b> {{i.website}}<br>
+                <b>Founded Date:</b> {{i.founded_date}}<br>
+                <b>Description:</b> {{i.description}}
+                <b>NO of Employee:</b> {{i.number_of_employees}}
+            </p>
+            <button id="edit-btn" class="btn btn-primary">Edit</button>
+        </div>
+    </div>
+
+    <div class="card-form" style="display:none;">
+        <form action="" method="post" enctype="multipart/form-data">
+            <!-- {% url 'edit_company_profile' %} this is action -->
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="fname" class="form-label">Company Name:</label>
+                <input type="text" class="form-control" name="fname" id="fname" maxlength="15"
+                    value="{{i.company_name}}">
+            </div>
+            <div class="mb-3">
+                <label for="fname" class="form-label">First Name:</label>
+                <input type="text" class="form-control" name="fname" id="fname" maxlength="15"
+                    value="{{i.user.first_name}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="lname" class="form-label">Last Name:</label>
+                <input type="text" class="form-control" name="lname" id="lname" maxlength="255"
+                    value="{{i.user.last_name}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone:</label>
+                <input type="text" class="form-control" name="phone" id="phone" maxlength="15" value="{{i.phone}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Address:</label>
+                <input type="text" class="form-control" name="address" id="address" maxlength="255"
+                    value="{{i.address}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="dob" class="form-label">founded date:</label>
+                <input type="date" class="form-control" name="dob" id="dob" value="{{ i.founded_date|date:'Y-m-d'}}">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description :</label>
+                <textarea class="form-control" name="description"
+                    id="work_experience">{{i.description}}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="number_of_employees" class="form-label">No Of Employess:</label>
+                <textarea class="form-control" name="number_of_employees" id="number_of_employees">{{i.number_of_employees}}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="logo" class="form-label">company logo:</label>
+                {% if i.logo %}
+                <p>{{ i.logo.url }}</p>
+                {% endif %}
+                <input type="file" class="form-control" name="logo" id="logo" accept="image/*" value="{{i.logo}}">
+            </div>
+
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endfor %}
+<script>
+    document.getElementById('edit-btn').addEventListener('click', function () {
+        document.querySelector('.card-form').style.display = 'block';
+    });
+</script>
+{% endblock 'main' %}

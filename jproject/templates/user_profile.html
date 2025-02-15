@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% block 'main' %}
+<style>
+    .card-content {
+        background-color: #d7dee5;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px; /* Add some spacing between cards */
+    }
+
+    .card-img-top {
+        border-radius: 15px 15px 0 0;
+        height: 200px;
+        object-fit: cover; /* Ensure the image covers the area while maintaining aspect ratio */
+    }
+
+    .show-form .card-form {
+        display: block;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        border-radius: 50px;
+        padding: 10px 20px;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        border-radius: 10px;
+    }
+
+    .card-form {
+        margin-top: 20px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% if not data %}
+<div class="container text-center mt-5">
+    <div class="alert alert-warning" role="alert">
+        <h1 class="alert-heading">Profile Not Created</h1>
+        <h3>Please create a profile for the best experience.</h3>
+        <hr>
+        <p class="mb-0">Click here to create your profile: <a href="{% url 'create_user_profile' %}" class="btn btn-primary btn-sm mt-2">Create Profile</a></p>
+    </div>
+</div>
+{% endif %}
+<div class="container mt-5 d-flex flex-wrap justify-content-around">
+    {% for i in data %}
+
+    <div class="card card-content bg-gradient-primary"> 
+
+        <img src="{{i.profile_pic.url}}" class="card-img-top rounded-circle m-5" style="width: 150px; height: 150px; object-fit: cover;" alt="Profile Picture">
+        <div class="card-body">
+            <h5 class="card-title">{{i.user.first_name}} {{i.user.last_name}}</h5>
+            <p class="card-text">
+                <b>Phone:</b> {{i.phone}}<br>
+                <b>Address:</b> {{i.address}}<br>
+                <b>Date of Birth:</b> {{i.dob}}<br>
+                <b>Education:</b> {{i.education}}<br>
+                <b>Work Experience:</b> {{i.work_experience}}<br>
+                <b>Skills:</b> {{i.skills}}
+                {% if i.resume %}
+                <strong>Resume:</strong> <a href="{{ i.resume.url }}" download>Download Resume</a><br>
+                {% endif %}
+            </p>
+            <button id="edit-btn" class="btn btn-primary">Edit</button>
+        </div>
+    </div>
+
+    <div class="card-form" style="display:none;">
+        <form action="edit_user_profile" method="post" style="background-color:antiquewhite;width: 1000px;" class="p-3" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="fname" class="form-label">First Name:</label>
+                <input type="text" class="form-control" name="fname" id="fname" maxlength="15"
+                    value="{{i.user.first_name}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="lname" class="form-label">Last Name:</label>
+                <input type="text" class="form-control" name="lname" id="lname" maxlength="255"
+                    value="{{i.user.last_name}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone:</label>
+                <input type="text" class="form-control" name="phone" id="phone" maxlength="15" value="{{i.phone}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Address:</label>
+                <input type="text" class="form-control" name="address" id="address" maxlength="255"
+                    value="{{i.address}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="dob" class="form-label">Date of Birth:</label>
+                <input type="date" class="form-control" name="dob" id="dob" value="{{ i.dob|date:'Y-m-d'}}">
+            </div>
+
+            <div class="mb-3">
+                <label for="education" class="form-label">Education:</label>
+                <textarea class="form-control" name="education" id="education">{{i.education}}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="work_experience" class="form-label">Work Experience:</label>
+                <textarea class="form-control" name="work_experience"
+                    id="work_experience">{{i.work_experience}}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="skills" class="form-label">Skills:</label>
+                <textarea class="form-control" name="skills" id="skills">{{i.skills}}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="profile_pic" class="form-label">Profile Picture:</label>
+                {% if i.profile_pic %}
+                <p>{{ i.profile_pic.url }}</p>
+                {% endif %}
+                <input type="file" class="form-control" name="profile_pic" id="profile_pic" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <label for="resume" class="form-label">Resume:</label>
+                <input type="file" class="form-control" name="resume" id="resume" accept=".pdf,.doc,.docx">
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    document.getElementById('edit-btn').addEventListener('click', function () {
+        document.querySelector('.card-form').style.display = 'block';
+    });
+</script>
+{% endblock 'main' %}

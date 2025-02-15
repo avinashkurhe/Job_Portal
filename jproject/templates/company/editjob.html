@@ -1,0 +1,79 @@
+{% extends 'company/cbase.html' %}
+{% block 'main' %}
+
+<div class="container">
+    <h1>Edit Job</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="jobtitle" class="form-label">Job Title:</label>
+            <input type="text" class="form-control" id="jobtitle" name="jobtitle" value="{{ data.jobtitle }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="salrange" class="form-label">Salary Range:</label>
+            <input type="number" class="form-control" id="salrange" name="salrange" value="{{ data.salrange }}"
+                required>
+        </div>
+        <div class="mb-3">
+            <label for="cat" class="form-label">Category:</label>
+            <select class="form-control" id="cat" name="cat" required>
+                <option value="Information Technology" {% if data.cat == "Information Technology" %}selected{% endif %}>Information Technology</option>
+                <option value="Healthcare" {% if data.cat == "Healthcare" %}selected{% endif %}>Healthcare</option>
+                <option value="Finance" {% if data.cat == "Finance" %}selected{% endif %}>Finance</option>
+                <option value="Education" {% if data.cat == "Education" %}selected{% endif %}>Education</option>
+                <option value="Engineering" {% if data.cat == "Engineering" %}selected{% endif %}>Engineering</option>
+                <option value="Marketing and Advertising" {% if data.cat == "Marketing and Advertising" %}selected{% endif %}>Marketing and Advertising</option>
+                <option value="Sales" {% if data.cat == "Sales" %}selected{% endif %}>Sales</option>
+            </select>
+        
+        <div class="mb-3">
+            <label for="jdetails" class="form-label">Job Details:</label>
+            <textarea class="form-control" id="jdetails" name="jdetails" required>{{ data.jdetails }}</textarea>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="is_active" name="is_active" {% if data.is_active%}checked{% endif %}>
+            <label for="is_active" class="form-check-label">Is Active</label>
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">Location:</label>
+            <input type="text" class="form-control" id="location" name="location" value="{{ data.location }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="application_deadline" class="form-label">Application Deadline:</label>
+            <input type="datetime-local" class="form-control" id="application_deadline" name="application_deadline"
+                value="{{ data.application_deadline|date:'Y-m-d\\TH:i' }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="contact_email" class="form-label">Contact Email:</label>
+            <input type="email" class="form-control" id="contact_email" name="contact_email"
+                value="{{ data.contact_email }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="contact_phone" class="form-label">Contact Phone:</label>
+            <input type="text" class="form-control" id="contact_phone" name="contact_phone"
+                value="{{ data.contact_phone }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="job_type" class="form-label">Job Type:</label>
+            <input type="text" class="form-control" id="job_type" name="job_type" value="{{ data.job_type }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="experience_required" class="form-label">Experience Required:</label>
+            <input type="text" class="form-control" id="experience_required" name="experience_required"
+                value="{{ data.experience_required }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="job_summary" class="form-label">Job Summary:</label>
+            <textarea class="form-control" id="job_summary" name="job_summary"
+                required>{{ data.job_summary }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="required_skills" class="form-label">Required Skills:</label>
+            <textarea class="form-control" id="required_skills" name="required_skills"
+                required>{{ data.required_skills }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+
+{% endblock 'main' %}

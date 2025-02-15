@@ -1,0 +1,35 @@
+{% extends 'company/cbase.html' %}
+{% block 'main' %}
+<div class="container mt-5 mb-5">
+    <h1>Posted Jobs</h1>
+    <table class="table table-striped">
+        {% if msg %}
+        {{msg}}
+        {% endif %}
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Salary Range</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in data %}
+            <tr>
+                <td>{{ job.jobtitle }}</td>
+                <td>{{ job.salrange }}</td>
+                <td>{{ job.cat }}</td>
+                <td>{{ job.location }}</td>
+                <td>
+                    <a href="edit_job/{{job.id}}" class="btn btn-primary">Edit</a>
+                    <a href="delete_job/{{job.id}}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock 'main' %}

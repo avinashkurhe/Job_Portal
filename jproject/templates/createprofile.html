@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block 'main' %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="col-md-6">
+        <form action="{% url 'create_user_profile' %}" method="post" style="background-color: rgb(107, 144, 144);" class="p-5 rounded" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h3>Create user profile</h3>
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{error}}
+            </div>
+            {% endif %}
+            <div class="mb-3">
+                <label for="fname" class="form-label">First Name</label>
+                <input type="text" class="form-control border-primary" id="fname" name="fname" required>
+            </div>
+            <div class="mb-3">
+                <label for="lname" class="form-label">Last Name</label>
+                <input type="text" class="form-control border-primary" id="lname" name="lname" required>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" class="form-control border-primary" id="phone" name="phone" required>
+            </div>
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <textarea class="form-control border-primary" id="address" name="address" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="dob" class="form-label">Date of Birth</label>
+                <input type="date" class="form-control border-primary" id="dob" name="dob" required>
+            </div>
+            <div class="mb-3">
+                <label for="education" class="form-label">Education</label>
+                <input type="text" class="form-control border-primary" id="education" name="education" required>
+            </div>
+            <div class="mb-3">
+                <label for="experience" class="form-label">Experience</label>
+                <textarea class="form-control border-primary" id="experience" name="work_experience" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="skills" class="form-label">Skills</label>
+                <textarea class="form-control border-primary" id="skills" name="skills" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="profile_pic" class="form-label">Profile Picture</label>
+                <input type="file" class="form-control border-primary" id="profile_pic" name="profile_pic">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Create Profile</button>
+        </form>
+    </div>
+</div>
+{% endblock 'main' %}

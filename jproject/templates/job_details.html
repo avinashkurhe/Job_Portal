@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block 'main' %}
+
+<div class="row mt-4 p-3"><!-- main section start or 2nd row start -->
+    <div class="col-md-6 mx-auto">
+        {% for i in data %}
+        <div class="card mb-4 shadow-sm job-card mx-auto">
+            <div class="card-body">
+                {% if success %}
+                <div class="alert alert-success" role="alert">
+                    {{success}}
+                </div>
+                {% elif errmsg %}
+                <div class="alert alert-danger" role="alert">
+                    {{errmsg}}
+                </div>
+                {% endif %}
+                
+                <h3 class="card-title"><strong>Job Title:</strong> {{i.jobtitle}}</h3>
+                <p class="card-text"><strong>Company:</strong> {{i.compname}}</p>
+                <p class="card-text"><strong>Job Posted:</strong> {{i.date_posted}}</p>
+                <p class="card-text"><strong>Application Deadline:</strong> {{i.application_deadline}}</p>
+                <p class="card-text"><strong>Location:</strong> {{i.location}}</p>
+                <p class="card-text"><strong>Salary:</strong> Rs.{{i.salrange}}</p>
+                <p class="card-text"><strong>Experience Required:</strong> {{i.experience_required}}</p>
+                <p class="card-text"><strong>Required Skills:</strong> {{i.required_skills}}</p>
+                <p class="card-text"><strong>Job Summary:</strong> {{i.job_summary}}</p>
+                <a href="/application_form/{{i.id}}/{{i.company.id}}" class="btn btn-primary mt-auto">Applay</a>            </div>
+        </div><!-- card design -->
+        {% endfor %}
+    </div>
+</div><!-- main section end or 2nd row end -->
+
+{% endblock 'main' %}
