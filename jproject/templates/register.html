@@ -3,47 +3,76 @@
     <div class="container">
         <div class="row mt-5">
             <div class="col-md-5 mx-auto shadow p-3" style="background-color: cornsilk;">
-                <form method="post" action="">
+                <form method="post" action="" onsubmit="return validateForm()">
                     {% csrf_token %}
                     <h3 class="text-center">User Register</h3>
+
                     {% if errmsg %}
                         <div class="alert alert-danger">{{ errmsg }}</div>
                     {% endif %}
                     {% if success %}
                         <div class="alert alert-success">{{ success }}</div>
                     {% endif %}
+
+                    <!-- User Role Selection -->
                     <div class="mb-3">
                         <label for="role" class="form-label">User Option</label>
-                        <select name="role" id="role" class="form-control">
+                        <select name="role" id="role" class="form-control" required>
                             <option value="">----Select Role----</option>
-                            <option value="Candidate">Candidate</option>
-                            <option value="Company">Company</option>
+                            <option value="Candidate" {% if role == 'Candidate' %}selected{% endif %}>Candidate</option>
+                            <option value="Company" {% if role == 'Company' %}selected{% endif %}>Company</option>
                         </select>
                     </div>
+
+                    <!-- First Name -->
                     <div class="mb-3">
                         <label for="fname" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="fname" name="fname" value="{{ fname }}">
+                        <input type="text" class="form-control" id="fname" name="fname" value="{{ fname }}" required>
                     </div>
+
+                    <!-- Last Name -->
                     <div class="mb-3">
                         <label for="lname" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lname" name="lname" value="{{ lname }}">
+                        <input type="text" class="form-control" id="lname" name="lname" value="{{ lname }}" required>
                     </div>
+
+                    <!-- Email -->
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ email }}">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ email }}" required>
                     </div>
+
+                    <!-- Password -->
                     <div class="mb-3">
                         <label for="pass" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="pass" name="pass" value="{{ pass }}">
+                        <input type="password" class="form-control" id="pass" name="pass" required>
                     </div>
+
+                    <!-- Confirm Password -->
                     <div class="mb-3">
                         <label for="cpass" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="cpass" name="cpass" value="{{ cpass }}">
+                        <input type="password" class="form-control" id="cpass" name="cpass" required>
                     </div>
-                    <button type="submit" class="btn btn-danger">SignUp</button>
-                    &nbsp; &nbsp;&nbsp; Already a user? &nbsp; <a href="/login_view">Login</a>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-danger">Sign Up</button>
+                    &nbsp;&nbsp;&nbsp; Already a user? <a href="/login_view">Login</a>
                 </form>
             </div>
         </div>
     </div>
-    {% endblock 'main' %}
+
+    <!-- JavaScript for Frontend Validation -->
+    <script>
+        function validateForm() {
+            let pass = document.getElementById("pass").value;
+            let cpass = document.getElementById("cpass").value;
+
+            if (pass !== cpass) {
+                alert("Passwords do not match!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+{% endblock 'main' %}

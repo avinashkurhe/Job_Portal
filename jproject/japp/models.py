@@ -16,7 +16,7 @@ class UserProfile(models.Model):
     education = models.TextField(blank=True)
     work_experience = models.TextField(blank=True)
     skills = models.TextField(blank=True)
-    profile_pic = models.ImageField(upload_to='profile_pics/', blank=True)
+    profile_pic = models.ImageField(upload_to='profile_pics/', blank=True,default='profile_pics/user_m2pACW0.png')
     resume = models.FileField(upload_to='resumes/', blank=True)  # Add resume field
 
 # CompanyProfile Model
@@ -30,6 +30,8 @@ class CompanyProfile(models.Model):
     logo = models.ImageField(upload_to='company_logos/', blank=True)
     description = models.TextField(blank=True)
     number_of_employees = models.IntegerField(null=True, blank=True)
+    def __str__(self):
+        return self.company_name
 
 # Jobs Model
 class Jobs(models.Model):

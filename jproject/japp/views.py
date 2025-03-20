@@ -12,6 +12,9 @@ from datetime import datetime
 from django.db import IntegrityError
 import razorpay
 from datetime import timedelta
+import re
+from django.utils import timezone
+
 
 #REGISTER FORM FOR USER (COMPANY AND CANDIDATE)
 def register(request):
@@ -19,35 +22,51 @@ def register(request):
         return render(request, 'register.html')
     else:
         context = {}
-        r = request.POST.get('role', '')  
-        fn = request.POST.get('fname', '')
-        ln = request.POST.get('lname', '')
-        e = request.POST.get('email', '')
-        p = request.POST.get('pass', '')
-        cp = request.POST.get('cpass', '')
+        r = request.POST.get('role', '').strip()
+        fn = request.POST.get('fname', '').strip()
+        ln = request.POST.get('lname', '').strip()
+        e = request.POST.get('email', '').strip()
+        p = request.POST.get('pass', '').strip()
+        cp = request.POST.get('cpass', '').strip()
+
         context['role'] = r
         context['fname'] = fn
         context['lname'] = ln
         context['email'] = e
 
-        if r not in ['Candidate','Company']:
-            context['errmsg'] = 'Please Select Role'
+        if r not in ['Candidate', 'Company']:
+            context['errmsg'] = 'Please select a valid role (Candidate or Company).'
         elif any(field == "" for field in [fn, ln, e, p, cp]):
-            context['errmsg'] = 'All fields are mandatory'
+            context['errmsg'] = 'All fields are mandatory.'
+        elif not re.match(r'^[A-Za-z]{2,}$', fn):
+            context['errmsg'] = 'First name must contain only letters and be at least 2 characters long.'
+        elif not re.match(r'^[A-Za-z]{2,}$', ln):
+            context['errmsg'] = 'Last name must contain only letters and be at least 2 characters long.'
+        elif not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', e):
+            context['errmsg'] = 'Please enter a valid email address.'
         elif p != cp:
-            context['errmsg'] = 'Password and confirm password must be the same'
+            context['errmsg'] = 'Password and confirm password must be the same.'
         elif len(p) < 8:
-            context['errmsg'] = 'Password should contain a minimum of 8 characters'
+            context['errmsg'] = 'Password must be at least 8 characters long.'
+        elif not re.search(r'[A-Z]', p):  
+            context['errmsg'] = 'Password must contain at least one uppercase letter.'
+        elif not re.search(r'[a-z]', p):  
+            context['errmsg'] = 'Password must contain at least one lowercase letter.'
+        elif not re.search(r'[0-9]', p):  
+            context['errmsg'] = 'Password must contain at least one number.'
+        elif not re.search(r'[\W_]', p): 
+            context['errmsg'] = 'Password must contain at least one special character.'
         else:
             try:
                 user = User.objects.create_user(username=e, first_name=fn, last_name=ln, email=e, password=p)
                 UserRole.objects.create(user=user, role=r)
-                context['success'] = 'User created successfully.'
+                context['success'] = 'User created successfully. Please log in.'
                 return redirect('login_view')
             except IntegrityError:
-                context['errmsg'] = 'User already exists, please login'
-                
+                context['errmsg'] = 'User already exists, please log in.'
         return render(request, 'register.html', context)
+    
+
 #LOGIN FORM FOR BOTH CANDIDATE,COMPANY & ADMIN
 def login_view(request):
     if request.method == 'GET':
@@ -82,18 +101,14 @@ def user_logout(request):
 
 
 # 1 page JOBS CARD
-from django.utils import timezone
-
 def jobs(request):
     current_time = timezone.now()
     active_jobs = Jobs.objects.filter(is_active=True, application_deadline__gte=current_time)
-
     if request.user.is_authenticated:
         applied_job_ids = UserJobApplication.objects.filter(applicant=request.user).values_list('job_id', flat=True)
         available_jobs = active_jobs.exclude(id__in=applied_job_ids)
     else:
         available_jobs = active_jobs
-
     context = {'data': available_jobs}
     return render(request, 'user_home.html', context)
 
@@ -111,8 +126,10 @@ def catfilter(request, cat):
     q1 = Q(cat=cat)
     q2 = Q(is_active=True)
     q3 = ~Q(id__in=applied_jobs)  # Exclude applied jobs
-    p = Jobs.objects.filter(q1 & q2 & q3)
-    context = {'data': p}
+    q4 = Q(application_deadline__gte=timezone.now())  # Exclude expired jobs
+
+    jobs = Jobs.objects.filter(q1 & q2 & q3 & q4)
+    context = {'data': jobs}
     return render(request, 'user_home.html', context)
 
 #filter by date
@@ -158,7 +175,7 @@ def salfilter(request):
                 q1 = Q(salrange__gte=min_sal)  
                 q2 = Q(salrange__lte=max_sal)  
                 q3 = Q(is_active=True)  
-                q4 = ~Q(id__in=applied_jobs)  # Exclude applied jobs
+                q4 = ~Q(id__in=applied_jobs)  
                 p = Jobs.objects.filter(q1 & q2 & q3 & q4)
                 if p.exists():
                     context['data'] = p
@@ -323,14 +340,12 @@ def edit_company_profile(request):
         company_profile.founded_date = request.POST.get('founded_date', '')
         company_profile.description = request.POST.get('description', '')
         company_profile.number_of_employees = request.POST.get('number_of_employees', '')
-        # Check if a new logo is uploaded
         if 'profile_pic' in request.FILES:
             company_profile.logo = request.FILES['profile_pic']
-        # Save changes
         company_profile.save()
-        company_profile.user.save()  # Save user model separately
+        company_profile.user.save() 
 
-        return render(request,'/company_profile')  # Redirect to the profile detail view
+        return render(request,'/company_profile')  
     return render(request, 'company/company_profile.html', {'company_profile': company_profile})
 
 #POST NEW JOB
@@ -437,11 +452,7 @@ def application_form(request, jid, cid):
             applicant_email = request.POST['applicant_email']
             cover_letter = request.POST['cover_letter']
             resume = request.FILES.get('resume')
-
-        # Create or get the applicant user
             applicant, created = User.objects.get_or_create(username=applicant_email, defaults={'email': applicant_email})
-
-        # Save job application
             job_application = UserJobApplication(
                 comp=company,
                 applicant=applicant,

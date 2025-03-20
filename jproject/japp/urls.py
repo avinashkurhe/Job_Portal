@@ -18,11 +18,10 @@ urlpatterns = [
     path('create_user_profile',views.create_user_profile,name='create_user_profile'),
     path('edit_user_profile',views.edit_user_profile,name='edit_user_profile'),
 
-
     path('company_view',views.company_view,name='company_view'),
     path('company_profile/', company_profile_view, name='company_profile'),
     path('create_company_profile/', views.create_company_profile, name='create_company_profile'),
-    path('edit_company_profile/',views.edit_company_profile, name='edit_company_profile'),
+    path('edit_company_profile',views.edit_company_profile, name='edit_company_profile'),
     path('post_job',views.post_job,name='post_job'),
     path('applicationsubmit',views.applicationsubmit),
 
